@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using WordReplace.Extensions;
 
-namespace WordReplace
+namespace WordReplace.References
 {
     public class Reference : IComparable
     {
@@ -12,19 +12,21 @@ namespace WordReplace
         
         public int Id { get; set; }
 
+		public string Tag { get; set; }
+
         public ReferenceType Type { get; set; }
         
         public string Category { get; set; }
         
         public int? Relevance { get; set; }
         
-        public string Author { get; set; }
+        public string Authors { get; set; }
         
         public string Title { get; set; }
         
         public string Magazine { get; set; }
         
-        public string Issue { get; set; }
+        public int? Issue { get; set; }
         
         public string Publisher { get; set; }
         
@@ -47,10 +49,18 @@ namespace WordReplace
         public string City { get; set; }
         
         public string Language { get; set; }
-        
+
+		public int? Volume { get; set; }
+
         public string Url { get; set; }
 
-        public Reference(IEnumerable<ReferenceFields> order, IEnumerable<string> values)
+		public string Description { get; set; }
+
+		private string SortingTitle { get { return (Type == ReferenceType.Book) ? Authors : Title; } }
+
+		public Reference() { }
+
+    	public Reference(IEnumerable<ReferenceFields> order, IEnumerable<string> values)
         {
             if (values.IsNullOrEmpty()) throw new ArgumentException("values");
             if (order.IsNullOrEmpty()) throw new ArgumentException("order");
@@ -105,8 +115,8 @@ namespace WordReplace
                     Relevance = value.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(value);
                     break;
 
-                case ReferenceFields.Author:
-                    Author = value;
+                case ReferenceFields.Authors:
+                    Authors = value;
                     break;
 
                 case ReferenceFields.Title:
@@ -118,7 +128,7 @@ namespace WordReplace
                     break;
 
                 case ReferenceFields.Issue:
-                    Issue = Issue;
+            		Issue = value.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(value);
                     break;
 
                 case ReferenceFields.Publisher:
@@ -127,6 +137,10 @@ namespace WordReplace
 
                 case ReferenceFields.Edition:
                     Edition = value.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(value);
+                    break;
+
+                case ReferenceFields.Volume:
+                    Volume = value.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(value);
                     break;
 
                 case ReferenceFields.Pages:
@@ -169,6 +183,10 @@ namespace WordReplace
                 case ReferenceFields.Url:
                     Url = value;
                     break;
+
+				case ReferenceFields.Description:
+					Description = value;
+                    break;
                 
                 default:
                     throw new ArgumentOutOfRangeException("field");
@@ -179,7 +197,7 @@ namespace WordReplace
         {
             if (!(obj is Reference)) return 1;
             var other = obj as Reference;
-            return Title.CompareTo(other.Title);
+			return SortingTitle.CompareTo(other.SortingTitle);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NDesk.Options;
 using WordReplace.Extensions;
+using WordReplace.References;
 
 namespace WordReplace
 {

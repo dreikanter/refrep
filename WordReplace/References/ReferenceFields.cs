@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WordReplace
+namespace WordReplace.References
 {
     public enum ReferenceFields
     {
@@ -18,8 +18,8 @@ namespace WordReplace
         [Description("Relevance")]
         Relevance,
         
-        [Description("Author")]
-        Author,
+        [Description("Authors")]
+        Authors,
         
         [Description("Title")]
         Title,
@@ -35,6 +35,9 @@ namespace WordReplace
         
         [Description("Edition")]
         Edition,
+        
+        [Description("Volume")]
+        Volume,
         
         [Description("Pages")]
         Pages,
@@ -65,5 +68,8 @@ namespace WordReplace
         
         [Description("Url")]
         Url,
+
+		[Description("Description")]
+		Description,
     }
 }

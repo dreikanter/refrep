@@ -17,7 +17,7 @@
         /// <summary>
         /// Non-breaking space
         /// </summary>
-        public const string Nbsp = " ";
+        public const string NbSp = " ";
 
         public const string AndOthers = "и др.";
 
@@ -26,6 +26,8 @@
         public const string EnDash = "–";
 
         public const string EmDash = "—";
+
+		public const string Hyphen = "-";
 
         public static string LoremIpsum = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed semper tincidunt tincidunt. Ut consequat, nunc malesuada placerat euismod, enim risus interdum elit, sit amet interdum nulla felis sed massa. Nullam eget justo eget urna faucibus elementum a non ligula. Phasellus facilisis volutpat odio sit amet rhoncus. Donec viverra lacinia dui, eu dictum dui ultrices non. Praesent volutpat nisl in lectus iaculis placerat. Donec nibh eros, accumsan vitae euismod vel, rhoncus eu nisi. Suspendisse nec iaculis ligula. Fusce eros lacus, vulputate sit amet malesuada vitae, molestie vitae nunc. Vestibulum lacus mi, dapibus sit amet pharetra vitae, gravida non nunc. Nunc nibh augue, pellentesque ut suscipit nec, convallis eu leo. Aliquam augue tellus, pharetra ac aliquam sit amet, consequat at sem. Praesent placerat felis nec metus gravida pulvinar. " +
             "Pellentesque non arcu ligula. Quisque nec sem quis nunc interdum varius. Curabitur mattis gravida sapien, vitae pellentesque mi pellentesque eget. Nulla sed orci non quam tristique mattis vitae vel dolor. Donec ac mi mauris, vel interdum lacus. Duis dolor mauris, venenatis quis pulvinar hendrerit, eleifend eget libero. Phasellus accumsan porttitor fringilla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id orci tortor. Ut semper nunc vitae enim consectetur lobortis. Curabitur sodales aliquam neque a venenatis. Sed eget arcu nisl. Nullam lacinia bibendum velit, in consectetur lectus hendrerit non. Donec at turpis vitae lectus scelerisque tincidunt. Pellentesque ac accumsan lorem. Suspendisse sed justo ut quam accumsan rutrum. Sed tempus lacinia pulvinar. Integer in tellus nec nibh lacinia iaculis sit amet ac mauris. Praesent nec velit sit amet ipsum dictum sollicitudin. Sed id urna dolor. " +

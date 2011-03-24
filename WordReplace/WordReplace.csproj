@@ -49,16 +49,23 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\SpecialExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="NDesk.Options\Options.cs" />
     <Compile Include="Params.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reference.cs" />
-    <Compile Include="ReferenceFields.cs" />
-    <Compile Include="ReferenceOrder.cs" />
-    <Compile Include="ReferenceReader.cs" />
-    <Compile Include="ReferenceType.cs" />
+    <Compile Include="References\Reference.cs" />
+    <Compile Include="References\ReferenceBuilder.cs" />
+    <Compile Include="References\ReferenceCollection.cs" />
+    <Compile Include="References\ReferenceCreator.cs" />
+    <Compile Include="References\ReferenceFields.cs" />
+    <Compile Include="References\ReferenceOrder.cs" />
+    <Compile Include="References\ReferenceReader.cs" />
+    <Compile Include="References\ReferenceReplacer.cs" />
+    <Compile Include="References\ReferenceType.cs" />
+    <Compile Include="References\ReferenceValidator.cs" />
+    <Compile Include="TemplateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -90,14 +97,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="source.doc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="references.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

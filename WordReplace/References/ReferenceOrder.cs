@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WordReplace
+namespace WordReplace.References
 {
     public enum ReferenceOrder
     {

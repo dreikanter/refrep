@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using NDesk.Options;
 using WordReplace.Extensions;
+using WordReplace.References;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace WordReplace
@@ -111,6 +113,36 @@ namespace WordReplace
             usedIds = ids;
             refMatches = matches;
         }
+
+		public static string ToReferenceText(IEnumerable<Reference> references)
+		{
+			if (references == null || !references.Any()) return String.Empty;
+			return String.Format("[{0}]", String.Join(", ", references.Select(r => r.RefNum.ToString()).ToArray()));
+		}
+
+		public static void TestRefReplacing()
+		{
+			var refs = new ReferenceCollection
+			           	{
+							new Reference{Id = 1, RefNum=11, Tag="tag1"},
+							new Reference{Id = 2, RefNum=12, Tag="tag2"},
+							new Reference{Id = 3, RefNum=13, Tag="tag3"},
+							new Reference{Id = 4, RefNum=14, Tag="таг1"},
+							new Reference{Id = 5, RefNum=15, Tag="таг2"},
+							new Reference{Id = 6, RefNum=16, Tag="таг3"},
+							new Reference{Id = 7, RefNum=17, Tag="tag4"},
+						};
+
+			var text = File.ReadAllText("source.txt");
+			var replacer = new ReferenceReplacer(text, ref refs, ReferenceOrder.Mention);
+			replacer.UsedReferences.Enumerate();
+
+			var sb = new StringBuilder(text);
+			foreach (var repl in replacer.Replacements)
+			{
+				sb.Replace(repl.Key, ToReferenceText(repl.Value));
+			}
+		}
 
         static void Main(string[] args)
         {

@@ -21,6 +21,8 @@ Thumbs.db
 [Dd]ebug*/
 *.lib
 *.sbr
+*.vsmdi
+*.testsettings
 obj/
 [Rr]elease*/
 _ReSharper*/

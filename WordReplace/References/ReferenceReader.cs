@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Excel;
 using WordReplace.Extensions;
 
-namespace WordReplace
+namespace WordReplace.References
 {
     public class ReferenceReader : IEnumerable<Reference>, IDisposable
     {

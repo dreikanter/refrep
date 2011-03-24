@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WordReplace
+namespace WordReplace.References
 {
     public enum ReferenceType
     {
@@ -9,13 +9,13 @@ namespace WordReplace
         [Description("Book")]
         Book,
 
+        [Description("Article")]
+        Article,
+
         [Description("Web page")]
         WebPage,
 
         [Description("Web site")]
         WebSite,
-
-        [Description("Article")]
-        Article,
     }
 }
