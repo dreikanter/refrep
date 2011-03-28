@@ -2,6 +2,9 @@
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Тип библиографической ссылки, определяющий то, как будет сгенерирован ее текст.
+	/// </summary>
     public enum ReferenceType
     {
         Unknown,

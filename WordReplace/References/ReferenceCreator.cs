@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using WordReplace.Extensions;
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Генератор текста ссылок для библиографического списка
+	/// </summary>
 	public class ReferenceCreator
 	{
 		public static string GetReferenceText(Reference reference)
 		{
-			var validator = new ReferenceValidator();
-			if (!validator.Validate(reference))
+			ICollection<string> errors;
+			if (!ReferenceValidator.Validate(reference, out errors))
 			{
-				throw new Exception(validator.Errors.SemicolonSeparated());
+				throw new Exception(errors.SemicolonSeparated());
 			}
 
 			switch (reference.Type)

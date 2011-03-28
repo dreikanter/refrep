@@ -15,6 +15,11 @@ namespace WordReplace.Extensions
 			return !String.IsNullOrEmpty(value);
 		}
 
+		public static bool Defined(this DateTime? value)
+		{
+			return value != null;
+		}
+
 		/// <summary>
 		/// Returns a shortened list of author names.
 		/// </summary>

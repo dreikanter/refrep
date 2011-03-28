@@ -8,6 +8,9 @@ using WordReplace.Extensions;
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Класс, считывающий объекты Reference из таблицы Excel.
+	/// </summary>
     public class ReferenceReader : IEnumerable<Reference>, IDisposable
     {
         private readonly string _workbookFileName;

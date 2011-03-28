@@ -6,6 +6,9 @@ using WordReplace.Extensions;
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Библиографическая ссылка. Объекты этого типа генерируются на основе данных из таблицы Excel.
+	/// </summary>
     public class Reference : IComparable
     {
         public int RefNum { get; set; }

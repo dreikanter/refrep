@@ -2,6 +2,10 @@
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Обёртка для StringBuilder, дополняющая его функциональностью, 
+	/// специфичной для генерации текста библиографических ссылок.
+	/// </summary>
 	public class ReferenceBuilder
 	{
 		private readonly StringBuilder _builder;

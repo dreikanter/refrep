@@ -2,6 +2,9 @@
 
 namespace WordReplace.References
 {
+	/// <summary>
+	/// Порядок сортировки списка библиографических ссылок.
+	/// </summary>
     public enum ReferenceOrder
     {
         [Description("Mention")]
