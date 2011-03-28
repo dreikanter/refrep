@@ -44,7 +44,7 @@ namespace WordReplace.References
 					break;
 
 				case ReferenceOrder.Alpha:
-					Sort((x, y) => x.SortingTitle.CompareTitleStrings(y.SortingTitle));
+					Sort((x, y) => x.CompareTo(y));
 					break;
 
 				default:

@@ -146,30 +146,30 @@ namespace WordReplace
 
         static void Main(string[] args)
         {
-            var param = new Params(args, Console.Out);
+            //var param = new Params(args, Console.Out);
 
 
 
 
-            return;
+            //return;
 
-            var path = GetExecPath();
+            //var path = GetExecPath();
 
-            object source = Path.Combine(path, "source.doc");
-            object target = Path.Combine(path, "target.doc");
+            //object source = Path.Combine(path, "source.doc");
+            //object target = Path.Combine(path, "target.doc");
 
-            var word = new Word.Application { Visible = false };
-            var missing = Type.Missing;
+            //var word = new Word.Application { Visible = false };
+            //var missing = Type.Missing;
 
-            var doc = word.Documents.Open(ref source, ref missing,
-                     ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing,
-                     ref missing, ref missing, ref missing, ref missing);
+            //var doc = word.Documents.Open(ref source, ref missing,
+            //         ref missing, ref missing, ref missing,
+            //         ref missing, ref missing, ref missing,
+            //         ref missing, ref missing, ref missing,
+            //         ref missing, ref missing, ref missing, ref missing);
 
-            IEnumerable<int> ids;
-            IDictionary<string, int[]> matches;
-            SearchIds(doc.Content.Text, out ids, out matches);
+            //IEnumerable<int> ids;
+            //IDictionary<string, int[]> matches;
+            //SearchIds(doc.Content.Text, out ids, out matches);
 
 //            doc.Activate();
 
@@ -196,7 +196,7 @@ namespace WordReplace
 //                        ref missing, ref missing, ref missing,
 //                        ref missing, ref missing);
 
-            word.Quit(ref missing, ref missing, ref missing);
+//            word.Quit(ref missing, ref missing, ref missing);
         }
     }
 }

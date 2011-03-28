@@ -200,7 +200,7 @@ namespace WordReplace.References
         {
             if (!(obj is Reference)) return 1;
             var other = obj as Reference;
-			return SortingTitle.CompareTo(other.SortingTitle);
+            return SortingTitle.CompareTitleStrings(other.SortingTitle);
         }
     }
 }
