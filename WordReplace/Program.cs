@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using NDesk.Options;
 using WordReplace.Extensions;
 using WordReplace.References;
 
@@ -22,49 +16,58 @@ namespace WordReplace
 			var refFile = Path.GetFullPath(param.RefFile);
 			if (!File.Exists(refFile))
 			{
-				Console.WriteLine("Reference file does not exists: " + param.RefFile);
+				LogWriteLine("Reference file does not exists: " + param.RefFile);
 				return;
 			}
 
 			var srcFile = Path.GetFullPath(param.SourceFile);
 			if (!File.Exists(srcFile))
 			{
-				Console.WriteLine("Source document does not exists: " + param.SourceFile);
+				LogWriteLine("Source document does not exists: " + param.SourceFile);
 				return;
 			}
 
-			Console.Write("Reading references from {0} ({1})... ".
-				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
-
-			var e = File.Exists(refFile);
-			var refs = ReadReferences(refFile);
-			if (refs.IsNullOrEmpty()) return;
-			Console.WriteLine("Done. Got {0} records.".Fill(refs.Count));
-
-			Console.WriteLine("Opening {0} ({1})...".
-				Fill(Path.GetFileName(srcFile), srcFile.GetFileSize().ToFormattedFileSize()));
-
 			try
 			{
-				using (var proc = new DocProcessor(srcFile, refs, param.Order))
-				{
-					Console.WriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
-						Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds, proc.Replacer.UnknownIds, proc.Replacer.UnknownTags));
-
-					if (proc.Replacer.BadIds.Any()) Console.WriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
-					if (proc.Replacer.UnknownIds.Any()) Console.WriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.CommaSeparated());
-					if (proc.Replacer.UnknownTags.Any()) Console.WriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
-
-					proc.Process(param.DestFile.IsNullOrEmpty() ? Utils.GetNewName(param.SourceFile) : param.DestFile);
-				}
+				ProcessDoc(srcFile, param.DestFile.IsNullOrEmpty() ? 
+					Utils.GetNewName(srcFile) : param.DestFile, refFile, param.Order);
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				LogWriteLine(ex.Message);
 			}
         }
 
-		private static ReferenceCollection ReadReferences(string fileName)
+		private static void ProcessDoc(string srcFile, string destFile, string refFile, ReferenceOrder order)
+		{
+			LogWrite("Reading references from {0} ({1})... ".
+				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
+			
+			var refs = ReadReferences(refFile);
+			
+			if (refs.IsNullOrEmpty())
+			{
+				LogWriteLine("Got no references. Processing stopped.");
+				return;
+			}
+
+			LogWriteLine("Done. Got {0} records.".Fill(refs.Count));
+			LogWriteLine("Opening {0} ({1})...".Fill(Path.GetFileName(srcFile), srcFile.GetFileSize().ToFormattedFileSize()));
+
+			using (var proc = new DocProcessor(srcFile, refs, order))
+			{
+				LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
+					Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds, proc.Replacer.UnknownIds, proc.Replacer.UnknownTags));
+
+				if (proc.Replacer.BadIds.Any()) LogWriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
+				if (proc.Replacer.UnknownIds.Any()) LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.Cast<string>().CommaSeparated());
+				if (proc.Replacer.UnknownTags.Any()) LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
+
+				proc.Process(destFile);
+			}
+		}
+
+    	private static ReferenceCollection ReadReferences(string fileName)
 		{
 			try
 			{
@@ -75,9 +78,19 @@ namespace WordReplace
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				LogWriteLine(ex.Message);
 				return null;
 			}
 		}
-    }
+
+		private static void LogWriteLine(string message)
+		{
+			Console.WriteLine(message);
+		}
+
+		private static void LogWrite(string message)
+		{
+			Console.Write(message);
+		}
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Office.Interop.Word;
 using WordReplace.Extensions;
 using WordReplace.References;
@@ -37,7 +38,9 @@ namespace WordReplace
 
 			try
 			{
-				_doc = _word.Documents.Open(fileName, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing);
+				_doc = _word.Documents.Open(fileName, ref _missing, ref _missing, ref _missing, 
+					ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, 
+					ref _missing, ref _missing, ref _missing, ref _missing, ref _missing);
 			}
 			catch(Exception ex)
 			{
@@ -56,23 +59,23 @@ namespace WordReplace
 
 		private void ReplaceReferences()
 		{
-			//doc.Activate();
+			_doc.Activate();
 
-			//// Loop through the StoryRanges (sections of the Word doc)
-			//foreach (Word.Range tmpRange in doc.StoryRanges)
-			//{
-			//    tmpRange.Find.Text = "[#123]";
-			//    tmpRange.Find.Replacement.Text = "]321[";
-			//    tmpRange.Find.Wrap = Word.WdFindWrap.wdFindContinue;
-			//    object replaceAll = Word.WdReplace.wdReplaceAll;
+			foreach (var pair in _rep.Replacements)
+			{
+				foreach (Range range in _doc.StoryRanges)
+				{
+					range.Find.Text = pair.Key;
+					range.Find.Replacement.Text = "[{0}]".Fill(pair.Value.Cast<string>().CommaSeparatedNb());
+					range.Find.Wrap = WdFindWrap.wdFindContinue;
 
-			//    tmpRange.Find.Execute(ref missing, ref missing, ref missing,
-			//        ref missing, ref missing, ref missing, ref missing,
-			//        ref missing, ref missing, ref missing, ref replaceAll,
-			//        ref missing, ref missing, ref missing, ref missing);
-			//}
+					object replaceAll = WdReplace.wdReplaceAll;
 
-			////            object format = Word.WdSaveFormat.wdFormatUnicodeText;
+					range.Find.Execute(ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, 
+						ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref replaceAll, 
+						ref _missing, ref _missing, ref _missing, ref _missing);
+				}
+			}
 		}
 
 		private void InsertRefList()
@@ -82,12 +85,9 @@ namespace WordReplace
 
 		private void Save(string fileName)
 		{
-			_word.ActiveDocument.SaveAs(fileName, ref _missing, // format
-						ref _missing, ref _missing, ref _missing,
-						ref _missing, ref _missing, ref _missing,
-						ref _missing, ref _missing, ref _missing,
-						ref _missing, ref _missing, ref _missing,
-						ref _missing, ref _missing);
+			_word.ActiveDocument.SaveAs(fileName, ref _missing, ref _missing, ref _missing, 
+				ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, 
+				ref _missing, ref _missing, ref _missing, ref _missing, ref _missing, ref _missing);
 		}
 
 		public void Dispose()

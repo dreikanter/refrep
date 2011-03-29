@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WordReplace.Extensions
 {
+	/// <summary>
+	/// Application domain-specific extension methods.
+	/// </summary>
 	public static class SpecialExtensions
 	{
 		public static bool Defined(this int? value)
@@ -46,6 +50,11 @@ namespace WordReplace.Extensions
 			}
 
 			return result.CommaSeparated();
+		}
+
+		public static string ToRefText(IEnumerable<int> refNums)
+		{
+			return refNums.IsNullOrEmpty() ? String.Empty : refNums.Cast<string>().CommaSeparated();
 		}
 	}
 }

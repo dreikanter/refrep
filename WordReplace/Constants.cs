@@ -6,9 +6,11 @@
 
         public const char RefIdDelimiter = ',';
 
-        public const string CommaWithSpace = ", ";
+		public const string CommaWithSpace = "," + NbSp;
 
-        public const string SemicolonWithSpace = "; ";
+		public const string CommaWithNbSp = "," + Space;
+
+		public const string SemicolonWithSpace = ";" + Space;
 
         public const string Ellipsis = "...";
 
@@ -21,7 +23,7 @@
 
         public const string AndOthers = "и др.";
 
-        public const string PagesSuffix = " с.";
+        public const string PagesSuffix = NbSp + "с.";
 
         public const string EnDash = "–";
 

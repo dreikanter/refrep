@@ -20,6 +20,11 @@ namespace WordReplace.Extensions
 			return list.Separated(Constants.CommaWithSpace, limit);
 		}
 
+		public static string CommaSeparatedNb(this IEnumerable<string> list)
+		{
+			return list.Separated(Constants.CommaWithNbSp);
+		}
+
 		public static string SemicolonSeparated(this IEnumerable<string> list)
 		{
 			return list.Separated(Constants.SemicolonWithSpace);

@@ -24,20 +24,33 @@ namespace WordReplace
 		public Params(IEnumerable<string> args, TextWriter outputWriter)
 		{
 			_outputWriter = outputWriter;
-			var showHelp = false;
-			var p = new OptionSet {{"s|source=", "Source Word document (*.doc[x] file)", v => SourceFile = v}, {"d|destination=", "Processed document name", v => DestFile = v}, {"r|references=", "References spreadsheet (*.xls[x] file)", v => RefFile = v}, {"o|order=", "Sort order for references (alpha|mention)", v => Order = v.GetEnumValueOrDefault<ReferenceOrder>()}, {"h|help", "Show this message and exit", v => showHelp = (v != null)}};
 
-			try
+			var showHelp = false;
+			var p = new OptionSet
+			        	{
+			        		{ "s|source=", "Source Word document (*.doc[x] file)", v => SourceFile = v }, 
+							{ "d|destination=", "Processed document name", v => DestFile = v }, 
+							{ "r|references=", "References spreadsheet (*.xls[x] file)", v => RefFile = v }, 
+							{ "o|order=", "Sort order for references (alpha|mention)", v => Order = v.GetEnumValueOrDefault<ReferenceOrder>() }, 
+							{ "h|help", "Show this message and exit", v => showHelp = (v != null) }
+			        	};
+
+			if (args.IsNullOrEmpty())
 			{
-				p.Parse(args);
+				showHelp = true;
 			}
-			catch (OptionException e)
+			else
 			{
-				WriteMessage("WordReplace: ");
-				WriteMessage(e.Message);
-				WriteMessage("Try `greet --help' for more information.");
-				Ready = false;
-				return;
+				try
+				{
+					p.Parse(args);
+				}
+				catch (OptionException e)
+				{
+					WriteMessage(e.Message);
+					Ready = false;
+					return;
+				}
 			}
 
 			if (showHelp)
@@ -54,8 +67,6 @@ namespace WordReplace
 			{
 				if (noSource) WriteMessage("Source file not specified");
 				if (noRef) WriteMessage("Reference file not specified");
-				WriteMessage();
-				ShowHelp(p);
 				Ready = false;
 				return;
 			}
@@ -67,8 +78,8 @@ namespace WordReplace
 
     	private void ShowHelp(OptionSet p)
         {
-            WriteMessage("Usage: ref [OPTIONS]+");
-			WriteMessage();
+    		WriteMessage("Bibliography Reference Processor for Microsoft Word documents");
+			WriteMessage("Usage: refrep [OPTIONS]+");
             WriteMessage("Options:");
             p.WriteOptionDescriptions(Console.Out);
         }
