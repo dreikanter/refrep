@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WordReplace.References;
 
 namespace WordReplace.Extensions
 {
@@ -55,6 +56,14 @@ namespace WordReplace.Extensions
 		public static string ToRefText(IEnumerable<int> refNums)
 		{
 			return refNums.IsNullOrEmpty() ? String.Empty : refNums.Cast<string>().CommaSeparated();
+		}
+
+		/// <summary>
+		/// Returns comma-separated list of sorted reference numbers.
+		/// </summary>
+		public static string GetOrderedRefNumList(this IEnumerable<Reference> refs)
+		{
+			return (from r in refs orderby r.RefNum ascending select r.RefNum).Cast<string>().CommaSeparatedNb();
 		}
 	}
 }

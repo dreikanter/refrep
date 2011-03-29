@@ -57,7 +57,8 @@ namespace WordReplace
 			using (var proc = new DocProcessor(srcFile, refs, order))
 			{
 				LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
-					Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds, proc.Replacer.UnknownIds, proc.Replacer.UnknownTags));
+					Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds.Length, 
+						proc.Replacer.UnknownIds.Length, proc.Replacer.UnknownTags.Length));
 
 				if (proc.Replacer.BadIds.Any()) LogWriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
 				if (proc.Replacer.UnknownIds.Any()) LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.Cast<string>().CommaSeparated());

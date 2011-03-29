@@ -30,9 +30,16 @@ namespace WordReplace.References
 		private readonly Dictionary<string, Reference[]> _replacements;
 
 		/// <summary>
-		/// Основной результат работы класса: словарь, в котором каждой ссылке и группе 
-		/// ссылок в тексте сопоставлена коллекция соответствующих объектов-ссылок.
+		/// Основной результат работы класса: словарь, в котором каждой группе ссылок (с произвольным 
+		/// количество элементов) сопоставлена коллекция соответствующих объектов-ссылок. Например,
+		/// для группы [[#1, #2, tag1]] это будет коллекция ссылок с ID равным 1 и 2, и с тегом равным "tag1".
 		/// </summary>
+		/// <remarks>
+		/// Если группа ссылок содержит нераспознанные или несуществующие ID или теги, такие 
+		/// ссылки не попадут Value (и, соответственно, в документ). Если Value имеет значение null, 
+		/// группа ссылок будет удалена из документа. То же относится к элементам, в которых 
+		/// Value - пустое множество.
+		/// </remarks>
 		public IDictionary<string, Reference[]> Replacements { get { return _replacements; } }
 
 		private readonly HashSet<string> _unknownTags;
@@ -66,21 +73,23 @@ namespace WordReplace.References
 
 			var re = new Regex(@"\[\[(([" + RefIdPrefix + @"\d\w\s" + RefDelimiter + @"]+)?)\]\]", RegexOptions.IgnoreCase);
 
-			foreach(Match match in re.Matches(text))
+			foreach (Match match in re.Matches(text))
 			{
 				var refText = match.Groups[0].Captures[0].Value;
 				var refList = match.Groups[1].Captures[0].Value;
 
-				if (Replacements.ContainsKey(refText)) continue;
+				if (_replacements.ContainsKey(refText)) continue;
 
 				var parts = refList.Split(new[] {RefDelimiter}, StringSplitOptions.RemoveEmptyEntries);
 				if (parts.Length < 1)
 				{
-					Replacements.Add(refText, null);
+					// Replacements with no references supposed to be deleted from document
+					_replacements.Add(refText, null);
 					continue;
 				}
 
-				var refs = new ReferenceCollection();
+				var refs = new HashSet<Reference>();
+
 				foreach (var part in parts.Select(part => part.Trim()).Where(p => p.Length != 0))
 				{
 					Reference reference;
@@ -113,11 +122,19 @@ namespace WordReplace.References
 					}
 
 					refs.Add(reference);
-					if (!UsedReferences.Contains(reference)) UsedReferences.Add(reference);
+					if (!_usedReferences.Contains(reference))
+					{
+						_usedReferences.Add(reference);
+					}
 				}
 
-				refs.Sort(order);
-				Replacements.Add(refText, refs.ToArray());
+				_replacements.Add(refText, refs.ToArray());
+			}
+
+			_usedReferences.Sort(order);
+			for (var i = 0; i < _usedReferences.Count; i++)
+			{
+				_usedReferences[i].RefNum = i + 1;
 			}
 		}
 	}

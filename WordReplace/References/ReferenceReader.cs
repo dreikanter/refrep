@@ -29,11 +29,7 @@ namespace WordReplace.References
             try
             {
                 var excelApp = new Application();
-                _workBook = excelApp.Workbooks.Open(workbookFileName,
-                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                    Type.Missing, Type.Missing);
+                _workBook = excelApp.Workbooks.Open(workbookFileName);
 
                 ExcelScanIntenal(_workBook);
             }

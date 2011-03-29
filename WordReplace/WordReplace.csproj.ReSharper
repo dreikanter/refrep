@@ -1,0 +1,5 @@
+<Configuration>
+  <NamespaceFolders>
+    <SkipFolder>EECF3EE6-D104-40C6-835B-755A45937CDD/d:Libs</SkipFolder>
+  </NamespaceFolders>
+</Configuration>
