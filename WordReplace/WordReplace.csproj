@@ -56,7 +56,7 @@
     <Compile Include="Extensions\SpecialExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Auxiliary\FileSizeFormatProvider.cs" />
-    <Compile Include="NDesk.Options\Options.cs" />
+    <Compile Include="Libs\NDesk.Options\Options.cs" />
     <Compile Include="Params.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

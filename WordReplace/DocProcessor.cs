@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.Office.Interop.Word;
 using WordReplace.Extensions;
 using WordReplace.References;
@@ -13,27 +12,28 @@ namespace WordReplace
 	{
 		private readonly Application _word;
 		
-		private object _missing = Type.Missing;
-
 		private readonly ReferenceCollection _refs;
 		
 		private readonly ReferenceOrder _order;
-
-		private readonly TextWriter _log;
 
 		private readonly ReferenceReplacer _rep;
 		
 		private readonly Document _doc;
 
-		public DocProcessor(string fileName, ReferenceCollection refs, ReferenceOrder order, TextWriter log)
+		private object _missing = Type.Missing;
+
+		public ReferenceCollection References { get { return _refs; } }
+
+		public ReferenceReplacer Replacer { get { return _rep; } }
+
+		public DocProcessor(string fileName, ReferenceCollection refs, ReferenceOrder order)
 		{
-			if (fileName.IsNullOrEmpty()) throw new ArgumentException("fileName");
+			if (fileName.IsNullOrBlank()) throw new ArgumentException("fileName");
 			if (refs.IsNullOrEmpty()) throw new ArgumentException("refs");
 
 			_word = new Application {Visible = false};
 			_refs = refs;
 			_order = order;
-			_log = log;
 
 			try
 			{
@@ -47,7 +47,14 @@ namespace WordReplace
 			_rep = new ReferenceReplacer(_doc.Content.Text, ref _refs, order);
 		}
 
-		public void ReplaceReferences()
+		public void Process(string saveTo)
+		{
+			ReplaceReferences();
+			InsertRefList();
+			Save(saveTo);
+		}
+
+		private void ReplaceReferences()
 		{
 			//doc.Activate();
 
@@ -68,12 +75,12 @@ namespace WordReplace
 			////            object format = Word.WdSaveFormat.wdFormatUnicodeText;
 		}
 
-		public void InsertRefList()
+		private void InsertRefList()
 		{
 			
 		}
 
-		public void Save(string fileName)
+		private void Save(string fileName)
 		{
 			_word.ActiveDocument.SaveAs(fileName, ref _missing, // format
 						ref _missing, ref _missing, ref _missing,

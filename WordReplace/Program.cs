@@ -16,7 +16,7 @@ namespace WordReplace
     {
         static void Main(string[] args)
         {
-            var param = new Params(args, Console.Out);
+			var param = new Params(args, Console.Out);
 			if (!param.Ready) return;
 
 			var refFile = Path.GetFullPath(param.RefFile);
@@ -44,61 +44,24 @@ namespace WordReplace
 			Console.WriteLine("Opening {0} ({1})...".
 				Fill(Path.GetFileName(srcFile), srcFile.GetFileSize().ToFormattedFileSize()));
 
-			using (var proc = new DocProcessor(srcFile, refs, param.Order, Console.Out))
+			try
 			{
+				using (var proc = new DocProcessor(srcFile, refs, param.Order))
+				{
+					Console.WriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
+						Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds, proc.Replacer.UnknownIds, proc.Replacer.UnknownTags));
 
+					if (proc.Replacer.BadIds.Any()) Console.WriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
+					if (proc.Replacer.UnknownIds.Any()) Console.WriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.CommaSeparated());
+					if (proc.Replacer.UnknownTags.Any()) Console.WriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
+
+					proc.Process(param.DestFile.IsNullOrEmpty() ? Utils.GetNewName(param.SourceFile) : param.DestFile);
+				}
 			}
-
-			var destFile = param.DestFile ?? Utils.GetNewName(param.SourceFile);
-
-
-
-			//return;
-
-            //var path = GetExecPath();
-
-            //object source = Path.Combine(path, "source.doc");
-            //object target = Path.Combine(path, "target.doc");
-
-            //var word = new Word.Application { Visible = false };
-            //var missing = Type.Missing;
-
-            //var doc = word.Documents.Open(ref source, ref missing,
-            //         ref missing, ref missing, ref missing,
-            //         ref missing, ref missing, ref missing,
-            //         ref missing, ref missing, ref missing,
-            //         ref missing, ref missing, ref missing, ref missing);
-
-            //IEnumerable<int> ids;
-            //IDictionary<string, int[]> matches;
-            //SearchIds(doc.Content.Text, out ids, out matches);
-
-//            doc.Activate();
-
-//            // Loop through the StoryRanges (sections of the Word doc)
-//            foreach (Word.Range tmpRange in doc.StoryRanges)
-//            {
-//                tmpRange.Find.Text = "[#123]";
-//                tmpRange.Find.Replacement.Text = "]321[";
-//                tmpRange.Find.Wrap = Word.WdFindWrap.wdFindContinue;
-//                object replaceAll = Word.WdReplace.wdReplaceAll;
-
-//                tmpRange.Find.Execute(ref missing, ref missing, ref missing,
-//                    ref missing, ref missing, ref missing, ref missing,
-//                    ref missing, ref missing, ref missing, ref replaceAll,
-//                    ref missing, ref missing, ref missing, ref missing);
-//            }
-
-////            object format = Word.WdSaveFormat.wdFormatUnicodeText;
-
-//            word.ActiveDocument.SaveAs(ref target, ref missing, // format
-//                        ref missing, ref missing, ref missing,
-//                        ref missing, ref missing, ref missing,
-//                        ref missing, ref missing, ref missing,
-//                        ref missing, ref missing, ref missing,
-//                        ref missing, ref missing);
-
-//            word.Quit(ref missing, ref missing, ref missing);
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
         }
 
 		private static ReferenceCollection ReadReferences(string fileName)
