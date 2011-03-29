@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\MandatoryFieldAttribute.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="References\ReferenceType.cs" />
     <Compile Include="References\ReferenceValidator.cs" />
     <Compile Include="TemplateAttribute.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">

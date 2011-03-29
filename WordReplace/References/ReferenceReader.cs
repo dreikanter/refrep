@@ -33,10 +33,10 @@ namespace WordReplace.References
             {
                 var excelApp = new Application();
                 _workBook = excelApp.Workbooks.Open(workbookFileName,
-                                                   Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                                   Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                                   Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                                   Type.Missing, Type.Missing);
+                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, Type.Missing);
 
                 ExcelScanIntenal(_workBook);
             }
@@ -46,14 +46,14 @@ namespace WordReplace.References
             }
         }
 
-        private void ExcelScanIntenal(Workbook workBookIn)
+        private void ExcelScanIntenal(Workbook workBook)
         {
-            if (workBookIn == null) throw new ArgumentNullException("workBookIn");
+            if (workBook == null) throw new ArgumentNullException("workBook");
 
-            var numSheets = workBookIn.Sheets.Count;
+            var numSheets = workBook.Sheets.Count;
             if (numSheets < 1) return;
 
-            var sheet = (Worksheet) workBookIn.Sheets[1];
+            var sheet = (Worksheet) workBook.Sheets[1];
             var valueArray = (object[,]) sheet.UsedRange.Value[XlRangeValueDataType.xlRangeValueDefault];
 
             var rowsNum = valueArray.GetLength(0);
