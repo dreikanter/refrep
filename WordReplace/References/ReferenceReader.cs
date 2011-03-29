@@ -21,13 +21,10 @@ namespace WordReplace.References
 
         public delegate void ErrorHandler(string message);
 
-        public event ErrorHandler Error;
-
-        public ReferenceReader(string workbookFileName, ErrorHandler errorHandler)
+        public ReferenceReader(string workbookFileName)
         {
             _workbookFileName = workbookFileName;
             _references = new List<Reference>();
-            Error += errorHandler;
 
             try
             {
@@ -42,7 +39,7 @@ namespace WordReplace.References
             }
             catch(Exception ex)
             {
-                InvokeError(ex.Message);
+                throw new Exception("Error reading {0}".Fill(workbookFileName), ex);
             }
         }
 
@@ -124,11 +121,6 @@ namespace WordReplace.References
         {
             _workBook.Close(false, _workbookFileName, null);
             Marshal.ReleaseComObject(_workBook);
-        }
-
-        public void InvokeError(string message)
-        {
-            if (Error != null) Error(message);
         }
     }
 }

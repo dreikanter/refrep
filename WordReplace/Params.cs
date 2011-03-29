@@ -21,59 +21,54 @@ namespace WordReplace
 
         public bool Ready { get; private set; }
 
-        public Params(IEnumerable<string> args, TextWriter outputWriter)
-        {
-            _outputWriter = outputWriter;
-            var showHelp = false;
-            var p = new OptionSet
-                        {
-                            { "s|source=", "Source Word document (*.doc[x] file)", v => SourceFile = v },
-                            { "d|destination=", "Processed document name", v => DestFile = v },
-                            { "r|references=", "References spreadsheet (*.xls[x] file)", v => RefFile= v },
-                            { "o|order=", "Sort order for references (alpha|mention)", v => Order = v.GetEnumValueOrDefault<ReferenceOrder>() },
-                            { "h|help",  "Show this message and exit", v => showHelp = (v != null) }
-                        };
+		public Params(IEnumerable<string> args, TextWriter outputWriter)
+		{
+			_outputWriter = outputWriter;
+			var showHelp = false;
+			var p = new OptionSet {{"s|source=", "Source Word document (*.doc[x] file)", v => SourceFile = v}, {"d|destination=", "Processed document name", v => DestFile = v}, {"r|references=", "References spreadsheet (*.xls[x] file)", v => RefFile = v}, {"o|order=", "Sort order for references (alpha|mention)", v => Order = v.GetEnumValueOrDefault<ReferenceOrder>()}, {"h|help", "Show this message and exit", v => showHelp = (v != null)}};
 
-            try
-            {
-                p.Parse(args);
-            }
-            catch (OptionException e)
-            {
-                WriteMessage("WordReplace: ");
-                WriteMessage(e.Message);
-                WriteMessage("Try `greet --help' for more information.");
-                Ready = false;
-                return;
-            }
+			try
+			{
+				p.Parse(args);
+			}
+			catch (OptionException e)
+			{
+				WriteMessage("WordReplace: ");
+				WriteMessage(e.Message);
+				WriteMessage("Try `greet --help' for more information.");
+				Ready = false;
+				return;
+			}
 
-            if (showHelp)
-            {
-                ShowHelp(p);
-                Ready = false;
-                return;
-            }
+			if (showHelp)
+			{
+				ShowHelp(p);
+				Ready = false;
+				return;
+			}
 
-            var noSource = SourceFile.IsNullOrBlank();
-            var noRef = RefFile.IsNullOrBlank();
+			var noSource = SourceFile.IsNullOrBlank();
+			var noRef = RefFile.IsNullOrBlank();
 
-            if (noSource || noRef)
-            {
-                if (noSource) WriteMessage("Source file not specified");
-                if (noRef) WriteMessage("Reference file not specified");
-                Ready = false;
-                return;
-            }
+			if (noSource || noRef)
+			{
+				if (noSource) WriteMessage("Source file not specified");
+				if (noRef) WriteMessage("Reference file not specified");
+				WriteMessage();
+				ShowHelp(p);
+				Ready = false;
+				return;
+			}
 
-            if (DestFile.IsNullOrBlank()) DestFile = GetDestinationFileName(SourceFile);
+			if (DestFile.IsNullOrBlank()) DestFile = GetDestinationFileName(SourceFile);
 
-            Ready = true;
-        }
+			Ready = true;
+		}
 
-        private void ShowHelp(OptionSet p)
+    	private void ShowHelp(OptionSet p)
         {
             WriteMessage("Usage: ref [OPTIONS]+");
-            WriteMessage("");
+			WriteMessage();
             WriteMessage("Options:");
             p.WriteOptionDescriptions(Console.Out);
         }
@@ -83,6 +78,11 @@ namespace WordReplace
             return Path.Combine(Path.GetDirectoryName(sourceFile), "{0}-ready{1}".
                 Fill(Path.GetFileNameWithoutExtension(sourceFile), Path.GetExtension(sourceFile)));
         }
+
+		public void WriteMessage()
+		{
+			WriteMessage(String.Empty);
+		}
        
         public void WriteMessage(string message)
         {

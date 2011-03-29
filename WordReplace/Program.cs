@@ -16,7 +16,42 @@ namespace WordReplace
     {
         static void Main(string[] args)
         {
-            //var param = new Params(args, Console.Out);
+            var param = new Params(args, Console.Out);
+			if (!param.Ready) return;
+
+			var refFile = Path.GetFullPath(param.RefFile);
+			if (!File.Exists(refFile))
+			{
+				Console.WriteLine("Reference file does not exists: " + param.RefFile);
+				return;
+			}
+
+			var srcFile = Path.GetFullPath(param.SourceFile);
+			if (!File.Exists(srcFile))
+			{
+				Console.WriteLine("Source document does not exists: " + param.SourceFile);
+				return;
+			}
+
+			Console.Write("Reading references from {0} ({1})... ".
+				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
+
+			var e = File.Exists(refFile);
+			var refs = ReadReferences(refFile);
+			if (refs.IsNullOrEmpty()) return;
+			Console.WriteLine("Done. Got {0} records.".Fill(refs.Count));
+
+			Console.WriteLine("Opening {0} ({1})...".
+				Fill(Path.GetFileName(srcFile), srcFile.GetFileSize().ToFormattedFileSize()));
+
+			using (var proc = new DocProcessor(srcFile, refs, param.Order, Console.Out))
+			{
+
+			}
+
+			var destFile = param.DestFile ?? Utils.GetNewName(param.SourceFile);
+
+
 
 			//return;
 
@@ -65,5 +100,21 @@ namespace WordReplace
 
 //            word.Quit(ref missing, ref missing, ref missing);
         }
+
+		private static ReferenceCollection ReadReferences(string fileName)
+		{
+			try
+			{
+				using (var reader = new ReferenceReader(fileName))
+				{
+					return new ReferenceCollection(reader);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return null;
+			}
+		}
     }
 }

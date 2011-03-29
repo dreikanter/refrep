@@ -7,6 +7,13 @@ namespace WordReplace.References
 {
 	public class ReferenceCollection : List<Reference>
 	{
+		public ReferenceCollection() { }
+
+		public ReferenceCollection(IEnumerable<Reference> references)
+		{
+			if (!references.IsNullOrEmpty()) AddRange(references);
+		}
+
 		public Reference GetByTag(string tag)
 		{
 			return this.FirstOrDefault(r => r.Tag == tag);

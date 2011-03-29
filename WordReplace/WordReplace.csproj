@@ -48,10 +48,14 @@
   <ItemGroup>
     <Compile Include="Attributes\MandatoryFieldAttribute.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DocProcessor.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Extensions\PathStringExtensions.cs" />
     <Compile Include="Extensions\SpecialExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Auxiliary\FileSizeFormatProvider.cs" />
     <Compile Include="NDesk.Options\Options.cs" />
     <Compile Include="Params.cs" />
     <Compile Include="Program.cs" />
