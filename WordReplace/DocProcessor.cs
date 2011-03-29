@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Office.Interop.Word;
 using WordReplace.Auxiliary;
@@ -83,7 +84,7 @@ namespace WordReplace
 
 		private void Save(string fileName)
 		{
-			_word.ActiveDocument.SaveAs(fileName);
+			_word.ActiveDocument.SaveAs(Path.GetFullPath(fileName));
 		}
 
 		private void FireMessage(string message)
@@ -93,7 +94,7 @@ namespace WordReplace
 
 		public void Dispose()
 		{
-			_word.Quit(Type.Missing, Type.Missing, Type.Missing);
+			_word.Quit(false);
 		}
 	}
 }

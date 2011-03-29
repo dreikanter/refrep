@@ -1,6 +1,6 @@
 
 Thumbs.db
-~$.*
+~$*.*
 *.obj
 *.exe
 *.pdb
@@ -28,4 +28,4 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
-/WordReplace/~$source.doc
+TestData/source-ready.doc

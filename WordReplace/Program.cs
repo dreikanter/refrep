@@ -13,24 +13,22 @@ namespace WordReplace
 			var param = new Params(args, Console.Out);
 			if (!param.Ready) return;
 
-			var refFile = Path.GetFullPath(param.RefFile);
-			if (!File.Exists(refFile))
+			if (!File.Exists(param.RefFile))
 			{
-				LogWriteLine("Reference file does not exists: " + param.RefFile);
+				LogWriteLine("Reference file does not exists: " + Path.GetFileName(param.RefFile));
 				return;
 			}
 
-			var srcFile = Path.GetFullPath(param.SourceFile);
-			if (!File.Exists(srcFile))
+			if (!File.Exists(param.SourceFile))
 			{
-				LogWriteLine("Source document does not exists: " + param.SourceFile);
+				LogWriteLine("Source document does not exists: " + Path.GetFileName(param.SourceFile));
 				return;
 			}
 
 			try
 			{
-				ProcessDoc(srcFile, param.DestFile.IsNullOrEmpty() ? 
-					Utils.GetNewName(srcFile) : param.DestFile, refFile, param.Order);
+				ProcessDoc(param.SourceFile, param.DestFile.IsNullOrEmpty() ? 
+					Utils.GetNewName(param.SourceFile) : param.DestFile, param.RefFile, param.Order);
 			}
 			catch (Exception ex)
 			{
@@ -38,8 +36,20 @@ namespace WordReplace
 			}
         }
 
-		private static void ProcessDoc(string srcFile, string destFile, string refFile, ReferenceOrder order)
+		///<summary>
+		/// This method launches DocProcessor and handles document processing.
+		/// </summary>
+		/// <remarks>
+		/// Each *FileName parameter is converted to full file path inside of this method. In other 
+		/// case this may lead to file-not-found exception during Word or Excel interoperation (external 
+		/// processes may have different current directories, that's why relative pathes may not work).
+		/// </remarks>
+		private static void ProcessDoc(string sourceFileName, string destFileName, string refFileName, ReferenceOrder order)
 		{
+			var refFile = Path.GetFullPath(refFileName);
+			var srcFile = Path.GetFullPath(sourceFileName);
+			var destFile = Path.GetFullPath(destFileName);
+
 			LogWrite("Reading references from {0} ({1})... ".
 				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
 			
@@ -56,15 +66,38 @@ namespace WordReplace
 
 			using (var proc = new DocProcessor(srcFile, refs, order))
 			{
-				LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
-					Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds.Length, 
-						proc.Replacer.UnknownIds.Length, proc.Replacer.UnknownTags.Length));
+				ReportProcState(proc);
 
-				if (proc.Replacer.BadIds.Any()) LogWriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
-				if (proc.Replacer.UnknownIds.Any()) LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.Cast<string>().CommaSeparated());
-				if (proc.Replacer.UnknownTags.Any()) LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
+				try
+				{
+					proc.Process(destFile);
+				}
+				catch (Exception ex)
+				{
+					LogWriteLine("Error: + " + ex.Message);
+				}
+			}
+		}
 
-				proc.Process(destFile);
+		private static void ReportProcState(DocProcessor proc)
+		{
+			LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
+				Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds.Length,
+					proc.Replacer.UnknownIds.Length, proc.Replacer.UnknownTags.Length));
+
+			if (proc.Replacer.BadIds.Any())
+			{
+				LogWriteLine("Bad IDs: " + proc.Replacer.BadIds.CommaSeparated());
+			}
+
+			if (proc.Replacer.UnknownIds.Any())
+			{
+				LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownIds.Cast<string>().CommaSeparated());
+			}
+
+			if (proc.Replacer.UnknownTags.Any())
+			{
+				LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
 			}
 		}
 
