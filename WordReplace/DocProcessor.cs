@@ -23,9 +23,9 @@ namespace WordReplace
 		
 		private readonly Document _doc;
 
-		public ReferenceCollection References { get { return _refs; } }
-
 		public ReferenceReplacer Replacer { get { return _rep; } }
+
+		private ListTemplate _listTemplate;
 
 		/// <summary>
 		/// General purpose message event. Can be used for processing progress indication.
@@ -62,6 +62,7 @@ namespace WordReplace
 
 		private void ReplaceReferences()
 		{
+			FireMessage("Replacing references...");
 			_doc.Activate();
 
 			foreach (var pair in _rep.Replacements)
@@ -79,12 +80,86 @@ namespace WordReplace
 
 		private void InsertRefList()
 		{
-			FireMessage("Generating bibliography list...");	
+			FireMessage("Generating bibliography list...");
+
+			_doc.Activate();
+			var range = GetRefListRange(Constants.RefListBookmark);
+			range.Select();
+
+			_word.Selection.Range.ListFormat.ApplyListTemplateWithLevel(GetListTemplate(), false, 
+				WdListApplyTo.wdListApplyToWholeList, WdDefaultListBehavior.wdWord10ListBehavior);
+
+			foreach(var reference in _rep.UsedReferences)
+			{
+				_word.Selection.TypeText(reference.Title);
+				_word.Selection.TypeParagraph();
+			}
+
+			_word.Selection.TypeBackspace();
 		}
 
 		private void Save(string fileName)
 		{
 			_word.ActiveDocument.SaveAs(Path.GetFullPath(fileName));
+			FireMessage("Document saved as {0}".Fill(fileName));
+		}
+
+		private Range GetRefListRange(string bookmark)
+		{
+			if(_doc == null) throw new InvalidOperationException();
+
+			try
+			{
+				// ReSharper disable UseIndexedProperty
+				return _doc.Bookmarks.get_Item(bookmark).Range;
+				// ReSharper restore UseIndexedProperty
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Reference list bookmark ('{0}') not found".Fill(bookmark), ex);
+			}
+		}
+
+		private ListTemplate GetListTemplate()
+		{
+			if (_listTemplate != null) return _listTemplate;
+
+			_listTemplate = _word.ListGalleries[WdListGalleryType.wdNumberGallery].ListTemplates[1];
+
+			var level = _listTemplate.ListLevels[1];
+
+			level.NumberFormat = "%1.";
+			level.TrailingCharacter = WdTrailingCharacter.wdTrailingTab;
+			level.NumberStyle = WdListNumberStyle.wdListNumberStyleArabic;
+			level.NumberPosition = _word.InchesToPoints(0.25f);
+			level.Alignment = WdListLevelAlignment.wdListLevelAlignLeft;
+			level.TextPosition = _word.InchesToPoints(0.5f);
+			level.TabPosition = (float) WdConstants.wdUndefined;
+			level.ResetOnHigher = 0;
+			level.StartAt = 1;
+
+			level.Font.Bold = (int) WdConstants.wdUndefined;
+			level.Font.Italic = (int) WdConstants.wdUndefined;
+			level.Font.StrikeThrough = (int) WdConstants.wdUndefined;
+			level.Font.Subscript = (int) WdConstants.wdUndefined;
+			level.Font.Superscript = (int) WdConstants.wdUndefined;
+			level.Font.Shadow = (int) WdConstants.wdUndefined;
+			level.Font.Outline = (int) WdConstants.wdUndefined;
+			level.Font.Emboss = (int) WdConstants.wdUndefined;
+			level.Font.Engrave = (int) WdConstants.wdUndefined;
+			level.Font.AllCaps = (int) WdConstants.wdUndefined;
+			level.Font.Hidden = (int) WdConstants.wdUndefined;
+			level.Font.Underline = WdUnderline.wdUnderlineNone;
+			level.Font.Color = WdColor.wdColorAutomatic;
+			level.Font.Size = (int) WdConstants.wdUndefined;
+			level.Font.Animation = WdAnimation.wdAnimationNone;
+			level.Font.DoubleStrikeThrough = (int) WdConstants.wdUndefined;
+
+			level.LinkedStyle = String.Empty;
+
+			_listTemplate.Name = "Bibliography reference list";
+
+			return _listTemplate;
 		}
 
 		private void FireMessage(string message)

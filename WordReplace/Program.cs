@@ -66,6 +66,7 @@ namespace WordReplace
 
 			using (var proc = new DocProcessor(srcFile, refs, order))
 			{
+				proc.Message += OnMessage;
 				ReportProcState(proc);
 
 				try
@@ -79,7 +80,7 @@ namespace WordReplace
 			}
 		}
 
-		private static void ReportProcState(DocProcessor proc)
+    	private static void ReportProcState(DocProcessor proc)
 		{
 			LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
 				Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds.Length,
@@ -115,6 +116,11 @@ namespace WordReplace
 				LogWriteLine(ex.Message);
 				return null;
 			}
+		}
+
+		private static void OnMessage(string message)
+		{
+			LogWriteLine(message);
 		}
 
 		private static void LogWriteLine(string message)
