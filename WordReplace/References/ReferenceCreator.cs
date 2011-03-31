@@ -167,18 +167,21 @@ namespace WordReplace.References
 
 			builder.Append(reference.Title);
 
+			builder.Append(Constants.WebResource).Space();
+
 			if(!reference.Source.IsNullOrBlank())
 			{
 				builder.Append(" // " + reference.Source).Dot().Space();
 				if(reference.Year != null)
 				{
-					builder.Append(reference.Year.ToString()).Dot().Space();
+					builder.Append(": [сайт]. {0}. ".Fill(reference.Year));
 				}
 			}
 
+			builder.Append("URL: " + reference.Url);
+
 			if(reference.SiteVisited != null)
 			{
-				builder.Append("URL: " + reference.Url);
 				builder.Space().Append(GetUrlDate((DateTime) reference.SiteVisited)).Dot();
 			}
 
@@ -195,7 +198,34 @@ namespace WordReplace.References
 		/// </example>
 		private static string GetWebSiteRef(Reference reference)
 		{
-			return null;
+			var builder = new ReferenceBuilder();
+
+			if (!reference.Authors.IsNullOrBlank())
+			{
+				builder.Append(GetAuthorsList(reference.Authors, false)).Space();
+			}
+
+			builder.Append(reference.Title);
+
+			builder.Append(Constants.WebResource).Space();
+
+			if (!reference.Source.IsNullOrBlank())
+			{
+				builder.Append(" // " + reference.Source).Dot().Space();
+				if (reference.Year != null)
+				{
+					builder.Append(": [сайт]. {0}. ".Fill(reference.Year));
+				}
+			}
+
+			builder.Append("URL: " + reference.Url);
+
+			if (reference.SiteVisited != null)
+			{
+				builder.Space().Append(GetUrlDate((DateTime)reference.SiteVisited)).Dot();
+			}
+
+			return builder.Text;
 		}
 
 		private static string GetCity(string cityName)

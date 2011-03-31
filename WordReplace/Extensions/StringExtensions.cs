@@ -158,7 +158,7 @@ namespace WordReplace.Extensions
 
 			if ((xIsRu && yIsRu) || !(xIsRu || yIsRu)) return x.CompareTo(y);
 
-			return xIsRu ? 1 : -1;
+			return xIsRu ? -1 : 1;
 		}
 
 		public static string InBrackets(this string value)
