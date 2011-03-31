@@ -5,9 +5,9 @@ using WordReplace.Extensions;
 namespace WordReplace.References
 {
 	/// <summary>
-	/// Генератор текста ссылок для библиографического списка
+	/// Генератор текста ссылок для библиографического списка (хелпер lkz rkfccf Reference).
 	/// </summary>
-	public class ReferenceCreator
+	public static class ReferenceCreator
 	{
 		public static string GetReferenceText(Reference reference)
 		{
@@ -42,7 +42,7 @@ namespace WordReplace.References
 
 			if (reference.Authors.Defined())
 			{
-				builder.Append(reference.Authors.GetAuthorsList(false));
+				builder.Append(GetAuthorsList(reference.Authors, false));
 				builder.Space();
 			}
 
@@ -91,21 +91,21 @@ namespace WordReplace.References
 
 			if (reference.Isbn.Defined())
 			{
-				builder.Space().Append("ISBN {0}.".Fill(reference.Isbn)).Dot();
+				builder.Space().Append("ISBN ").Append(reference.Isbn).Dot();
 			}
 
 			if (reference.Description.Defined())
 			{
-				builder.Space().Append("({0})".Fill(reference.Description)).Dot();
+				builder.Space().Append(reference.Description.InParentheses()).Dot();
 			}
 
 			return builder.Text;
 		}
 
-		/// <summary>
+		/// <example>
 		/// Ефимова Т. Н., Кусакин А. В. Охрана и рациональное использование болот 
 		/// в Республике Марий Эл // Проблемы региональной экологии. 2007. № 1. С. 80-86.
-		/// </summary>
+		/// </example>
 		private static string GetArticleRef(Reference reference)
 		{
 			var builder = new ReferenceBuilder();
@@ -113,12 +113,12 @@ namespace WordReplace.References
 
 			if (reference.Authors.Defined())
 			{
-				builder.Append(reference.Authors.GetAuthorsList(false));
+				builder.Append(GetAuthorsList(reference.Authors, false));
 				builder.Space();
 			}
 
 			builder.Append(reference.Title).NbSp().Append("//").NbSp();
-			builder.Append(reference.Magazine).Dot().Space();
+			builder.Append(reference.Source).Dot().Space();
 			builder.Append(reference.Year.ToString()).Dot();
 			
 			if (reference.Issue != null)
@@ -137,37 +137,62 @@ namespace WordReplace.References
 
 			if (reference.Isbn.Defined())
 			{
-				builder.Space().Append("ISSN {0}.".Fill(reference.Isbn)).Dot();
+				builder.Space().Append("ISSN ").Append(reference.Isbn).Dot();
 			}
 
 			if (reference.Description.Defined())
 			{
-				builder.Space().Append("({0})".Fill(reference.Description)).Dot();
+				builder.Space().Append(reference.Description.InParentheses()).Dot();
 			}
 
 			return builder.Text;
 		}
 
-		/// <summary>
+		/// <example>
 		/// Лэтчфорд Е. У. С Белой армией в Сибири [Электронный ресурс] // Восточный фронт 
-		/// армии адмирала А. В. Колчака: [сайт]. [2004]. URL: http://east-front.narod.ru/memo/latchford.htm (дата обращения: 23.08.2007).
+		/// армии адмирала А. В. Колчака: [сайт]. [2004]. URL: http://east-front.narod.ru/memo/latchford.htm 
+		/// (дата обращения: 23.08.2007).
 		///
 		/// Дирина А. И. Право военнослужащих Российской Федерации на свободу ассоциаций // Военное право: 
 		/// сетевой журн. 2007. URL: http://www.voennoepravo.ru/node/2149 (дата обращения: 19.09.2007).
-		/// </summary>
+		/// </example>
 		private static string GetWebPageRef(Reference reference)
 		{
-			return null;
+			var builder = new ReferenceBuilder();
+			
+			if(!reference.Authors.IsNullOrBlank())
+			{
+				builder.Append(GetAuthorsList(reference.Authors, false)).Space();
+			}
+
+			builder.Append(reference.Title);
+
+			if(!reference.Source.IsNullOrBlank())
+			{
+				builder.Append(" // " + reference.Source).Dot().Space();
+				if(reference.Year != null)
+				{
+					builder.Append(reference.Year.ToString()).Dot().Space();
+				}
+			}
+
+			if(reference.SiteVisited != null)
+			{
+				builder.Append("URL: " + reference.Url);
+				builder.Space().Append(GetUrlDate((DateTime) reference.SiteVisited)).Dot();
+			}
+
+			return builder.Text;
 		}
 
-		/// <summary>
+		/// <example>
 		/// Список документов «Информационно-справочной системы архивной отрасли» (ИССАО) и ее 
 		/// приложения — «Информационной системы архивистов России» (ИСАР) // Консалтинговая группа 
 		/// «Термика»: [сайт]. URL: http://www.termika.ru/dou/progr/spisok24.html (дата обращения: 16.11.2007).
 		/// 
 		/// 78. Лэтчфорд Е. У. С Белой армией в Сибири [Электронный ресурс] // Восточный фронт армии адмирала 
 		/// А. В. Колчака: [сайт]. [2004]. URL: http://east-front.narod.ru/memo/latchford.htm (дата обращения: 23.08.2007).
-		/// </summary>
+		/// </example>
 		private static string GetWebSiteRef(Reference reference)
 		{
 			return null;
@@ -306,19 +331,37 @@ namespace WordReplace.References
 			throw new ArgumentException("Bad language value");
 		}
 
-		private static string GetUrlDate(string lang, DateTime dateTime)
+		private static string GetUrlDate(DateTime dateTime)
 		{
-			if (lang.Equals("ru", StringComparison.InvariantCultureIgnoreCase))
+			return "(дата обращения: {0})".Fill(dateTime.ToString(Constants.UrlDateFormat));
+		}
+
+		/// <summary>
+		/// Returns a shortened list of author names.
+		/// </summary>
+		private static string GetAuthorsList(string authors, bool initialsInFront)
+		{
+			var result = new List<string>();
+
+			foreach (var author in authors.Split(new[] { Constants.AuthorsDelimiter }, StringSplitOptions.RemoveEmptyEntries))
 			{
-				return "(дата обращения: {0})".Fill(dateTime.ToString("dd-MM-yy"));
+				var nameParts = new List<string>();
+
+				foreach (var part in author.Split(new[] { " ", "\t", "." }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					nameParts.Add((nameParts.Count == 1) ? part.Trim().Capitilize() : "{0}.".Fill(part.GetInitial()));
+				}
+
+				if (initialsInFront)
+				{
+					nameParts.Add(nameParts[0]);
+					nameParts.RemoveAt(0);
+				}
+
+				result.Add(nameParts.JoinWith(Constants.NbSp));
 			}
 
-			if (lang.Equals("en", StringComparison.InvariantCultureIgnoreCase))
-			{
-				return "(reference date: {0})".Fill(dateTime.ToString("MM-dd-yy"));
-			}
-
-			throw new ArgumentException("Bad language value");
+			return result.CommaSeparated();
 		}
 	}
 }

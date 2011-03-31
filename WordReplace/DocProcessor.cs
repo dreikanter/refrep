@@ -63,6 +63,7 @@ namespace WordReplace
 		private void ReplaceReferences()
 		{
 			FireMessage("Replacing references...");
+
 			_doc.Activate();
 
 			foreach (var pair in _rep.Replacements)
@@ -71,13 +72,17 @@ namespace WordReplace
 				foreach (Range range in _doc.StoryRanges)
 				{
 					range.Find.Text = pair.Key;
-					range.Find.Replacement.Text = "[{0}]".Fill(pair.Value.GetOrderedRefNumList());
+					range.Find.Replacement.Text = pair.Value.GetOrderedRefNumList().InBrackets();
 					range.Find.Wrap = WdFindWrap.wdFindContinue;
 					range.Find.Execute(Replace: WdReplace.wdReplaceAll);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Генерация и вставка библиографического списка в документ, 
+		/// по букмарку Constants.RefListBookmark.
+		/// </summary>
 		private void InsertRefList()
 		{
 			FireMessage("Generating bibliography list...");
@@ -91,7 +96,7 @@ namespace WordReplace
 
 			foreach(var reference in _rep.UsedReferences)
 			{
-				_word.Selection.TypeText(reference.Title);
+				_word.Selection.TypeText(ReferenceCreator.GetReferenceText(reference));
 				_word.Selection.TypeParagraph();
 			}
 

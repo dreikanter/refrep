@@ -19,8 +19,6 @@ namespace WordReplace.References
         
         private readonly Workbook _workBook;
 
-        public delegate void ErrorHandler(string message);
-
         public ReferenceReader(string workbookFileName)
         {
             _workbookFileName = workbookFileName;
@@ -35,7 +33,7 @@ namespace WordReplace.References
             }
             catch(Exception ex)
             {
-                throw new Exception("Error reading {0}".Fill(workbookFileName), ex);
+                throw new Exception("Error reading " + workbookFileName, ex);
             }
         }
 
@@ -74,7 +72,7 @@ namespace WordReplace.References
 
             if (unknownFields.Any())
             {
-                throw new Exception("Unknown fields found: [{0}]".Fill(unknownFields.CommaSeparated()));
+                throw new Exception("Unknown fields found: " + unknownFields.CommaSeparated().InBrackets());
             }
 
             for (var row = 2; row < rowsNum; row++)

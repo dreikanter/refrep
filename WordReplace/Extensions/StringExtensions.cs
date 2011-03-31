@@ -160,5 +160,20 @@ namespace WordReplace.Extensions
 
 			return xIsRu ? 1 : -1;
 		}
+
+		public static string InBrackets(this string value)
+		{
+			return String.Format("[{0}]", value);
+		}
+
+		public static string InBraces(this string value)
+		{
+			return String.Format(@"\{{0}\}", value);
+		}
+
+		public static string InParentheses(this string value)
+		{
+			return String.Format("({0})", value);
+		}
 	}
 }

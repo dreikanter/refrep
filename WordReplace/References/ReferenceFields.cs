@@ -37,7 +37,7 @@ namespace WordReplace.References
 		/// <summary>
 		/// Название периодического издания.
 		/// </summary>
-        [Description("Magazine")]
+        [Description("Source")]
         Magazine,
         
 		/// <summary>

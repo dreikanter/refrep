@@ -80,9 +80,11 @@ namespace WordReplace
         {
     		WriteMessage("Bibliography Reference Processor for Microsoft Word documents");
 			WriteMessage("Usage: refrep [OPTIONS]+");
-            WriteMessage("Options:");
+            WriteMessage("\nOptions:");
             p.WriteOptionDescriptions(Console.Out);
-        }
+			WriteMessage("\nExample:");
+			WriteMessage("  refrep -s source.docx -r references.xlsx -o alpha");
+		}
 
         private static string GetDestinationFileName(string sourceFile)
         {
@@ -90,12 +92,7 @@ namespace WordReplace
                 Fill(Path.GetFileNameWithoutExtension(sourceFile), Path.GetExtension(sourceFile)));
         }
 
-		public void WriteMessage()
-		{
-			WriteMessage(String.Empty);
-		}
-       
-        public void WriteMessage(string message)
+    	private void WriteMessage(string message)
         {
             if (_outputWriter != null) _outputWriter.WriteLine(message);
         }

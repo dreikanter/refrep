@@ -4,7 +4,7 @@ using WordReplace.Extensions;
 namespace WordReplace.References
 {
 	/// <summary>
-	/// Валидатор целостности данных для объектов Reference.
+	/// Валидатор целостности данных для объектов Reference (хелпер Reference).
 	/// </summary>
 	/// <remarks>
 	/// По сути есть всего одна проверка: наличие того или иного поля (плюс более сложное 
@@ -62,7 +62,7 @@ namespace WordReplace.References
 		{
 			if (!reference.Title.Defined()) errors.Add("Title not defined");
 
-			if (!reference.Magazine.Defined()) errors.Add("Magazine name not defined");
+			if (!reference.Source.Defined()) errors.Add("Magazine name not defined");
 
 			if (!reference.Year.Defined()) errors.Add("Year not defined");
 

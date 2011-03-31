@@ -27,7 +27,10 @@ namespace WordReplace.References
         
         public string Title { get; set; }
         
-        public string Magazine { get; set; }
+		/// <summary>
+		/// Название журнала или сайта
+		/// </summary>
+        public string Source { get; set; }
         
         public int? Issue { get; set; }
         
@@ -127,7 +130,7 @@ namespace WordReplace.References
                     break;
 
                 case ReferenceFields.Magazine:
-                    Magazine = value;
+                    Source = value;
                     break;
 
                 case ReferenceFields.Issue:
@@ -202,5 +205,10 @@ namespace WordReplace.References
             var other = obj as Reference;
             return SortingTitle.CompareTitleStrings(other.SortingTitle);
         }
+
+		public override string ToString()
+		{
+			return ReferenceCreator.GetReferenceText(this);
+		}
     }
 }

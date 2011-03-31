@@ -6,7 +6,7 @@ using WordReplace.References;
 
 namespace WordReplace
 {
-    class Program
+	static class Program
     {
         static void Main(string[] args)
         {
@@ -49,6 +49,8 @@ namespace WordReplace
 			var refFile = Path.GetFullPath(refFileName);
 			var srcFile = Path.GetFullPath(sourceFileName);
 			var destFile = Path.GetFullPath(destFileName);
+
+			LogWriteLine("{0} % {1} -> {2}".Fill(srcFile, refFile, destFile));
 
 			LogWrite("Reading references from {0} ({1})... ".
 				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
