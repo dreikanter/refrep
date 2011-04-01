@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Word;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

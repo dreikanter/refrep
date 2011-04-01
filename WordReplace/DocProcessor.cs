@@ -27,8 +27,6 @@ namespace WordReplace
 
 		public ReferenceReplacer Replacer { get { return _rep; } }
 
-		private ListTemplate _listTemplate;
-
 		/// <summary>
 		/// General purpose message event. Can be used for processing progress indication.
 		/// </summary>
@@ -131,11 +129,9 @@ namespace WordReplace
 
 		private ListTemplate GetListTemplate()
 		{
-			if (_listTemplate != null) return _listTemplate;
+			ListTemplate tpl = _word.ListGalleries[WdListGalleryType.wdNumberGallery].ListTemplates[1];
 
-			_listTemplate = _word.ListGalleries[WdListGalleryType.wdNumberGallery].ListTemplates[1];
-
-			var level = _listTemplate.ListLevels[1];
+			var level = tpl.ListLevels[1];
 
 			level.NumberFormat = "%1.";
 			level.TrailingCharacter = WdTrailingCharacter.wdTrailingTab;
@@ -166,9 +162,9 @@ namespace WordReplace
 
 			level.LinkedStyle = String.Empty;
 
-			_listTemplate.Name = "Bibliography reference list";
+			tpl.Name = "Bibliography reference list";
 
-			return _listTemplate;
+			return tpl;
 		}
 
 		private void FireMessage(string message)

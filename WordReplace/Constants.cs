@@ -20,9 +20,9 @@
 
         public const char AuthorsDelimiter = ',';
 
-		public const string CommaWithSpace = "," + NbSp;
+		public const string CommaWithSpace = ", ";
 
-		public const string CommaWithNbSp = ", ";
+		public const string CommaWithNbSp = "," + NbSp;
 
 		public const string SemicolonWithSpace = "; ";
 
@@ -31,9 +31,9 @@
         /// <summary>
         /// Non-breaking space
         /// </summary>
-        public const string NbSp = " ";
+		public const string NbSp = "&nbsp;"; //" ";
 
-        public const string AndOthers = "и др.";
+		public const string AndOthers = "и" + NbSp + "др."; //"и др.";
 
         public const string PagesSuffix = NbSp + "с.";
 

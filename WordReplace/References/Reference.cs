@@ -208,7 +208,7 @@ namespace WordReplace.References
 
 		public override string ToString()
 		{
-			return ReferenceCreator.GetReferenceText(this);
+			return ReferenceStringGenerator.GetReferenceText(this);
 		}
     }
 }

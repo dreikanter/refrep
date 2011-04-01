@@ -66,15 +66,14 @@
     <Compile Include="References\Reference.cs" />
     <Compile Include="References\ReferenceBuilder.cs" />
     <Compile Include="References\ReferenceCollection.cs" />
-    <Compile Include="References\ReferenceCreator.cs" />
+    <Compile Include="References\ReferenceStringGenerator.cs" />
     <Compile Include="References\ReferenceFields.cs" />
     <Compile Include="References\ReferenceOrder.cs" />
     <Compile Include="References\ReferenceReader.cs" />
     <Compile Include="References\ReferenceReplacer.cs" />
     <Compile Include="References\ReferenceType.cs" />
+    <Compile Include="References\ReferenceUtils.cs" />
     <Compile Include="References\ReferenceValidator.cs" />
-    <Compile Include="RichText\TextStyle.cs" />
-    <Compile Include="TemplateAttribute.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
