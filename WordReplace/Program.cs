@@ -8,6 +8,7 @@ namespace WordReplace
 {
 	static class Program
     {
+		[STAThread]
         static void Main(string[] args)
         {
 			var param = new Params(args, Console.Out);

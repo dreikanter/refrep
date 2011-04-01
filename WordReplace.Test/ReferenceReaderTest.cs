@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WordReplace.References;
 
 namespace WordReplace.Test
@@ -13,9 +12,7 @@ namespace WordReplace.Test
 		[TestMethod]
 		public void ReadingTest()
 		{
-			var fileName = Path.GetFullPath(@"{0}\..\..\..\TestData\references.xlsx");
- 
-			using (var reader = new ReferenceReader(fileName))
+			using (var reader = new ReferenceReader(TestFileNames.RefFile))
 			{
 				foreach (var row in reader)
 				{

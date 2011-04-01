@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Office.Interop.Word;
 using WordReplace.Auxiliary;
 using WordReplace.Extensions;
 using WordReplace.References;
+using Application = Microsoft.Office.Interop.Word.Application;
 
 namespace WordReplace
 {
@@ -96,7 +98,9 @@ namespace WordReplace
 
 			foreach(var reference in _rep.UsedReferences)
 			{
-				_word.Selection.TypeText(ReferenceCreator.GetReferenceText(reference));
+
+				Clipboard.SetText(Utils.GetHtmlClipboardText(reference.ToString()), TextDataFormat.Html);
+				_word.Selection.PasteSpecial(DataType: WdPasteDataType.wdPasteHTML);
 				_word.Selection.TypeParagraph();
 			}
 
