@@ -10,46 +10,6 @@ namespace WordReplace.References
 	/// </summary>
 	public static class ReferenceUtils
 	{
-		/// <example>
-		/// Список документов «Информационно-справочной системы архивной отрасли» (ИССАО) и ее 
-		/// приложения — «Информационной системы архивистов России» (ИСАР) // Консалтинговая группа 
-		/// «Термика»: [сайт]. URL: http://www.termika.ru/dou/progr/spisok24.html (дата обращения: 16.11.2007).
-		/// 
-		/// 78. Лэтчфорд Е. У. С Белой армией в Сибири [Электронный ресурс] // Восточный фронт армии адмирала 
-		/// А. В. Колчака: [сайт]. [2004]. URL: http://east-front.narod.ru/memo/latchford.htm (дата обращения: 23.08.2007).
-		/// </example>
-		public static string GetWebSiteRef(Reference reference)
-		{
-			var builder = new ReferenceBuilder();
-
-			if (!reference.Authors.IsNullOrBlank())
-			{
-				builder.Append("<i>{0}</i>".Fill(GetAuthorsList(reference.Authors, false, true))).Space();
-			}
-
-			builder.Append(reference.Title);
-
-			builder.Append(Constants.WebResource).Space();
-
-			if (!reference.Source.IsNullOrBlank())
-			{
-				builder.Append(" // " + reference.Source).Dot().Space();
-				if (reference.Year != null)
-				{
-					builder.Append(": [сайт]. {0}. ".Fill(reference.Year));
-				}
-			}
-
-			builder.Append("URL: " + reference.Url);
-
-			if (reference.SiteVisited != null)
-			{
-				builder.Space().Append(GetUrlDate((DateTime)reference.SiteVisited)).Dot();
-			}
-
-			return builder.Text;
-		}
-
 		public static string GetCity(string cityName)
 		{
 			if (cityName.Equals("Москва", StringComparison.InvariantCultureIgnoreCase))
@@ -139,7 +99,7 @@ namespace WordReplace.References
 		{
 			if (lang.Equals("ru", StringComparison.InvariantCultureIgnoreCase))
 			{
-				return Constants.Hyphen + "е";
+				return Constants.NbHyphen + "е";
 			}
 
 			if (lang.Equals("en", StringComparison.InvariantCultureIgnoreCase))

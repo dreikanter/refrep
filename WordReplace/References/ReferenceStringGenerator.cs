@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using WordReplace.Extensions;
 
 namespace WordReplace.References
@@ -11,12 +10,6 @@ namespace WordReplace.References
 	{
 		public static string GetReferenceText(Reference reference)
 		{
-			ICollection<string> errors;
-			if (!ReferenceValidator.Validate(reference, out errors))
-			{
-				throw new Exception(errors.SemicolonSeparated());
-			}
-
 			switch (reference.Type)
 			{
 				case ReferenceType.Book:
@@ -26,7 +19,7 @@ namespace WordReplace.References
 					return GetWebPageRef(reference);
 
 				case ReferenceType.WebSite:
-					return ReferenceUtils.GetWebSiteRef(reference);
+					return GetWebSiteRef(reference);
 
 				case ReferenceType.Article:
 					return GetArticleRef(reference);
@@ -163,7 +156,7 @@ namespace WordReplace.References
 				builder.Append("<i>{0}</i>".Fill(ReferenceUtils.GetAuthorsList(reference.Authors, false, true))).Space();
 			}
 
-			builder.Append(reference.Title);
+			builder.Append(reference.Title).Space();
 
 			builder.Append(Constants.WebResource).Space();
 
@@ -176,9 +169,49 @@ namespace WordReplace.References
 				}
 			}
 
-			builder.Append("URL: " + reference.Url);
+			builder.Append("URL:{0}<i>{1}</i>".Fill(Constants.NbSp, reference.Url));
 
 			if(reference.SiteVisited != null)
+			{
+				builder.Space().Append(ReferenceUtils.GetUrlDate((DateTime)reference.SiteVisited)).Dot();
+			}
+
+			return builder.Text;
+		}
+
+		/// <example>
+		/// Список документов «Информационно-справочной системы архивной отрасли» (ИССАО) и ее 
+		/// приложения — «Информационной системы архивистов России» (ИСАР) // Консалтинговая группа 
+		/// «Термика»: [сайт]. URL: http://www.termika.ru/dou/progr/spisok24.html (дата обращения: 16.11.2007).
+		/// 
+		/// 78. Лэтчфорд Е. У. С Белой армией в Сибири [Электронный ресурс] // Восточный фронт армии адмирала 
+		/// А. В. Колчака: [сайт]. [2004]. URL: http://east-front.narod.ru/memo/latchford.htm (дата обращения: 23.08.2007).
+		/// </example>
+		private static string GetWebSiteRef(Reference reference)
+		{
+			var builder = new ReferenceBuilder();
+
+			if (!reference.Authors.IsNullOrBlank())
+			{
+				builder.Append("<i>{0}</i>".Fill(ReferenceUtils.GetAuthorsList(reference.Authors, false, true))).Space();
+			}
+
+			builder.Append(reference.Title).Space();
+
+			builder.Append(Constants.WebResource).Space();
+
+			if (!reference.Source.IsNullOrBlank())
+			{
+				builder.Append(" // " + reference.Source).Dot().Space();
+				if (reference.Year != null)
+				{
+					builder.Append(": [сайт]. {0}. ".Fill(reference.Year));
+				}
+			}
+
+			builder.Append("URL:{0}<i>{1}</i>".Fill(Constants.NbSp, reference.Url));
+
+			if (reference.SiteVisited != null)
 			{
 				builder.Space().Append(ReferenceUtils.GetUrlDate((DateTime)reference.SiteVisited)).Dot();
 			}

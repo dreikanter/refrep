@@ -17,6 +17,7 @@ namespace WordReplace.Test
 			             		{"Иванов Петр", "Иванов П."},
 			             		{"Williams John", "Williams J."},
 			             		{"Иванов", "Иванов"},
+			             		{"O'Neill Wyss B.", "O'Neill W.B."},
 			             		{"", ""},
 			             	};
 

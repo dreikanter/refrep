@@ -1,0 +1,1 @@
+bin\Debug\refrep -s ../WordReplace.Test/TestData/source.docx -r ../WordReplace.Test/TestData/references.xlsx -o alpha

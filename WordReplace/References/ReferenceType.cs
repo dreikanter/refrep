@@ -7,7 +7,7 @@ namespace WordReplace.References
 	/// </summary>
     public enum ReferenceType
     {
-        Unknown,
+        Unknown = 0,
 
         [Description("Book")]
         Book,

@@ -8,8 +8,6 @@ namespace WordReplace.Extensions
 {
 	public static class StringExtensions
 	{
-		public static readonly string Ellipsis = "...";
-
 		public static string CommaSeparated(this IEnumerable<string> list)
 		{
 			return list.Separated(Constants.CommaWithSpace);
@@ -20,9 +18,9 @@ namespace WordReplace.Extensions
 			return list.Separated(Constants.CommaWithSpace, limit);
 		}
 
-		public static string CommaSeparatedNb(this IEnumerable<string> list)
+		public static string CommaSeparatedNb(this IEnumerable<string> list, bool useNbSp)
 		{
-			return list.Separated(Constants.CommaWithNbSp);
+			return list.Separated(useNbSp ? Constants.CommaWithNbSp : Constants.CommaWithNbSpChar);
 		}
 
 		public static string SemicolonSeparated(this IEnumerable<string> list)
@@ -104,7 +102,7 @@ namespace WordReplace.Extensions
 
 		public static string Ellip(this string value, int maxLen)
 		{
-			return value.Ellip(maxLen, Ellipsis);
+			return value.Ellip(maxLen, Constants.Ellipsis);
 		}
 
 		public static string Ellip(this string value, int maxLen, string suffix)

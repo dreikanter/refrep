@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WordReplace.Extensions;
@@ -51,16 +52,21 @@ namespace WordReplace
 			var srcFile = Path.GetFullPath(sourceFileName);
 			var destFile = Path.GetFullPath(destFileName);
 
-			LogWriteLine("{0} % {1} -> {2}".Fill(srcFile, refFile, destFile));
+			LogWriteLine("{0} % {1} -> {2}".Fill(Path.GetFileName(sourceFileName), 
+				Path.GetFileName(refFileName), Path.GetFileName(destFileName)));
 
 			LogWrite("Reading references from {0} ({1})... ".
 				Fill(Path.GetFileName(refFile), refFile.GetFileSize().ToFormattedFileSize()));
 			
 			var refs = ReadReferences(refFile);
-			
-			if (refs.IsNullOrEmpty())
+
+			try
 			{
-				LogWriteLine("Got no references. Processing stopped.");
+				ValidateReferences(refs);
+			}
+			catch(Exception ex)
+			{
+				LogWriteLine("\n{0}\n{1}".Fill(ex.Message, "Processing stopped."));
 				return;
 			}
 
@@ -78,12 +84,36 @@ namespace WordReplace
 				}
 				catch (Exception ex)
 				{
-					LogWriteLine("Error: + " + ex.Message);
+					LogWriteLine("Error: " + ex.Message);
 				}
 			}
 		}
 
-    	private static void ReportProcState(DocProcessor proc)
+		private static void ValidateReferences(IEnumerable<Reference> refs)
+		{
+			if (refs.IsNullOrEmpty())
+			{
+				throw new Exception("Got no references.");
+			}
+
+			var errorMessages = new List<string>();
+			
+			foreach (var reference in refs)
+			{
+				ICollection<string> errors;
+				if (!ReferenceValidator.Validate(reference, out errors))
+				{
+					errorMessages.Add("Row {0}: {1}".Fill(reference.RowNum, errors.SemicolonSeparated()));
+				}
+			}
+
+			if(errorMessages.Any())
+			{
+				throw new Exception("Invalid records data found:\n" + errorMessages.JoinWith("\n"));
+			}
+		}
+
+		private static void ReportProcState(DocProcessor proc)
 		{
 			LogWriteLine("Found {0} reference groups; {1} bad IDs; {2} unknown IDs; {3} unknown tags".
 				Fill(proc.Replacer.Replacements.Count, proc.Replacer.BadIds.Length,
@@ -101,7 +131,7 @@ namespace WordReplace
 
 			if (proc.Replacer.UnknownTags.Any())
 			{
-				LogWriteLine("Unknown IDs: " + proc.Replacer.UnknownTags.CommaSeparated());
+				LogWriteLine("Unknown Tags: " + proc.Replacer.UnknownTags.CommaSeparated());
 			}
 		}
 

@@ -40,7 +40,7 @@ namespace WordReplace.References
 					return ValidateWebSite(reference, ref validationErrors);
 
 				default:
-					validationErrors.Add("Nothing to validate.");
+					validationErrors.Add("Type not defined or has incorrect value");
 					return false;
 			}
 		}
@@ -53,9 +53,12 @@ namespace WordReplace.References
 
 			if (!reference.Year.Defined()) errors.Add("Year not defined");
 
-			if (!reference.Pages.Defined() || !(reference.From.Defined() && reference.To.Defined())) errors.Add("Pages number (or interval) not defined");
+			if (!reference.Pages.Defined() && !(reference.From.Defined() && reference.To.Defined()))
+			{
+				errors.Add("Pages number (or interval) not defined");
+			}
 
-			return errors.Count > 0;
+			return errors.Count == 0;
 		}
 
 		private static bool ValidateArticle(Reference reference, ref ICollection<string> errors)
@@ -68,34 +71,34 @@ namespace WordReplace.References
 
 			if (!reference.Issue.Defined()) errors.Add("Issue not defined");
 
-			if (!reference.Pages.Defined() && !reference.From.Defined() && !reference.To.Defined())
+			if (!reference.Pages.Defined() && !(reference.From.Defined() && reference.To.Defined()))
 			{
-				errors.Add("Pages not defined");
+				errors.Add("Pages number (or interval) not defined");
 			}
 
-			return errors.Count > 0;
+			return errors.Count == 0;
 		}
 
 		private static bool ValidateWebPage(Reference reference, ref ICollection<string> errors)
 		{
 			if (!reference.Title.Defined()) errors.Add("Title not defined");
 
-			if (!reference.Url.Defined()) errors.Add(" not defined");
+			if (!reference.Url.Defined()) errors.Add("URL not defined");
 
-			if (!reference.SiteVisited.Defined()) errors.Add(" not defined");
+			if (!reference.SiteVisited.Defined()) errors.Add("URL visiting time not defined");
 
-			return errors.Count > 0;
+			return errors.Count == 0;
 		}
 
 		private static bool ValidateWebSite(Reference reference, ref ICollection<string> errors)
 		{
 			if (!reference.Title.Defined()) errors.Add("Title not defined");
 
-			if (!reference.Url.Defined()) errors.Add(" not defined");
+			if (!reference.Url.Defined()) errors.Add("URL not defined");
 
-			if (!reference.SiteVisited.Defined()) errors.Add(" not defined");
+			if (!reference.SiteVisited.Defined()) errors.Add("URL visiting time  not defined");
 
-			return errors.Count > 0;
+			return errors.Count == 0;
 		}
 	}
 }

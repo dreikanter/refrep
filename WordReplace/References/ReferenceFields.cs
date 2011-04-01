@@ -11,6 +11,9 @@ namespace WordReplace.References
 
         [Description("ID")]
         Id,
+
+		[Description("Tag")]
+		Tag,
         
         [Description("Type")]
         Type,

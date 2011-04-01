@@ -89,15 +89,15 @@ namespace WordReplace.References
                     }
                     else if (cell is DateTime)
                     {
-                        values.Add(((DateTime)cell).ToString(Constants.DateTimeFormat));
+                    	values.Add(((DateTime) cell).ToString(Constants.DateTimeFormat));
                     }
                     else
                     {
-                        values.Add(cell.ToString());
+                        values.Add(cell.ToString().Trim());
                     }
                 }
 
-                _references.Add(new Reference(order, values));
+                _references.Add(new Reference(row, order, values));
             }
         }
 

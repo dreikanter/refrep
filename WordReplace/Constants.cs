@@ -24,6 +24,8 @@
 
 		public const string CommaWithNbSp = "," + NbSp;
 
+		public const string CommaWithNbSpChar = "," + NbSpChar;
+
 		public const string SemicolonWithSpace = "; ";
 
         public const string Ellipsis = "...";
@@ -31,9 +33,11 @@
         /// <summary>
         /// Non-breaking space
         /// </summary>
-		public const string NbSp = "&nbsp;"; //" ";
+		public const string NbSp = "&nbsp;";
 
-		public const string AndOthers = "и" + NbSp + "др."; //"и др.";
+		public const string NbSpChar = " ";
+
+		public const string AndOthers = "и" + NbSp + "др.";
 
         public const string PagesSuffix = NbSp + "с.";
 
@@ -42,6 +46,8 @@
         public const string EmDash = "—";
 
 		public const string Hyphen = "-";
+
+		public const string NbHyphen = "&#8209;";
 
     	public const string RefListBookmark = "Bibliography";
 

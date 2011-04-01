@@ -93,6 +93,7 @@ namespace WordReplace
 
 			_word.Selection.Range.ListFormat.ApplyListTemplateWithLevel(GetListTemplate(), false, 
 				WdListApplyTo.wdListApplyToWholeList, WdDefaultListBehavior.wdWord10ListBehavior);
+			_word.Selection.Range.ParagraphFormat.KeepTogether = -1;
 
 			foreach(var reference in _rep.UsedReferences)
 			{

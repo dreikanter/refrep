@@ -31,7 +31,7 @@ namespace WordReplace.Extensions
 		public static string GetOrderedRefNumList(this IEnumerable<Reference> refs)
 		{
 			var refNums = from r in refs orderby r.RefNum ascending select r.RefNum.ToString();
-			return refNums.CommaSeparatedNb();
+			return refNums.CommaSeparatedNb(false);
 		}
 	}
 }
