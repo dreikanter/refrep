@@ -1,0 +1,2 @@
+Find out how to get Word and Excel process when starting application through Interop
+Improvement: Always close Word and Excel processes before exit
